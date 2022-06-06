@@ -10,12 +10,12 @@ public class Conexion {
 	private Connection con = null;
 	private static Conexion db;
 	private PreparedStatement preparedStatement;
-
-	private static final String url = "fanny.db.elephantsql.com";
-	private static final String dbName = "jnvgnqqv";
+	
+	private static final String url = "jdbc:postgresql://localhost:5432/";
+	private static final String dbName = "users";
 	private static final String driver = "org.postgresql.Driver";
-	private static final String userName = "jnvgnqqv";
-	private static final String password = "aTo0Yykrx9nCmRavmYFsikv_usQtfOen";
+	private static final String userName = "postgres";
+	private static final String password = "Jorge1804";
 
 	public Conexion() {
 		try {

@@ -10,5 +10,5 @@ public interface BillDao {
 	public void insert(Bill bill) throws SQLException;
 	public void delete(int id) throws SQLException;
 	public List<Bill> selectAll();
-	public Bill select();	
+	public Bill select(int id);	
 }

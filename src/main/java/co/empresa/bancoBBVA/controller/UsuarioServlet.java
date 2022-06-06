@@ -2,6 +2,7 @@ package co.empresa.bancoBBVA.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,74 +15,92 @@ import co.empresa.bancoBBVA.dao.UsuarioDao;
 import co.empresa.bancoBBVA.dao.UsuarioDaoFactory;
 import co.empresa.bancoBBVA.modelo.Usuario;
 
-
 /**
  * Servlet implementation class UsuarioServlet
  */
 @WebServlet("/")
 public class UsuarioServlet extends HttpServlet {
 	private UsuarioDao usuarioDao;
-	
+
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public UsuarioServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    public void init() {
-    	String type = getServletContext().getInitParameter("type");
-		this.usuarioDao = UsuarioDaoFactory.getUsuarioDao(type);
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public UsuarioServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public void init() {
+		String type = getServletContext().getInitParameter("type");
+		this.usuarioDao = UsuarioDaoFactory.getUsuarioDao(type);
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String action = request.getServletPath();
 
 		try {
-		switch (action) {
-		case "/login":
-			showLogin(request, response);
-			break;
-		case "/loged":
-			logearUsuario(request, response);
-			break;
-		default:
-			showLogin(request, response);
-			break;
-		}
-		} catch(SQLException e) {
-			
+			switch (action) {
+			case "/login":
+				showLogin(request, response);
+				break;
+			case "/loged":
+				logearUsuario(request, response);
+				break;
+			default:
+				listUsuario(request, response);
+				break;
+			}
+		} catch (SQLException e) {
+
 		}
 	}
 
-	private void logearUsuario(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+	private void listUsuario(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		List<Usuario> listUsuarios = usuarioDao.selectAll();
+		request.setAttribute("listUsuario", listUsuarios);
+
+		RequestDispatcher dispatcher = request.getRequestDispatcher("usuariolist.jsp");
+		dispatcher.forward(request, response);
+
+	}
+
+	private void logearUsuario(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, ServletException, IOException {
+		
 		String username = request.getParameter("username");
 		String pass = request.getParameter("pass");
 		
-		Usuario usuarioActual = (Usuario) usuarioDao.login(username, pass);
+		Usuario usuario = usuarioDao.login(username, pass);
 		
-		request.setAttribute("user", usuarioActual);
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("usuario.jsp");
-		dispatcher.forward(request, response);
-		
+		if(usuario == null) {
+			request.setAttribute("mensaje", "Error en nombre de usuario o contraseña");
+			request.getRequestDispatcher("login.jsp").forward(request, response);
+		}else {
+			response.sendRedirect("billlist.jsp");
+		}
+
 	}
 
-	private void showLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void showLogin(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
 		dispatcher.forward(request, response);
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
