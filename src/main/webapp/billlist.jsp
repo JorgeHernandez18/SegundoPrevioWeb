@@ -18,6 +18,9 @@
 			<div>
 				<img style="height: 10vh "alt="Logo BBVA" src="https://imgs.search.brave.com/I56CLl8ubHVXT8Pzwb4ubTiA-SJy3_ze0Wpj9EWULdA/rs:fit:1200:748:1/g:ce/aHR0cHM6Ly93d3cu/aW52ZXN0b3BlZGlh/LmNvbS90aG1iL1Z3/Z2VudFdWekh4eWhR/X0Q2NjJkSTFWYi1V/az0vMjUwMHg3NDgv/ZmlsdGVyczpub191/cHNjYWxlKCk6bWF4/X2J5dGVzKDE1MDAw/MCk6c3RyaXBfaWNj/KCkvYmJ2YS1sb2dv/LWM2NWVhNjE5YzBk/NzQ5YTE4MDQzMWMx/NzI5ODVkOGZhLnBu/Zw">
 			</div>
+			<div class="container text-right">	
+				<a style="text-decoration: none; color: blue;" href="<%=request.getContextPath()%>/BillServlet?action=logout">Cerrar Sesión</a>
+			</div>
 		</nav>
 	</header>
 	
@@ -29,24 +32,28 @@
 			<table class="table">
 				<thead>
 					<tr>
-						<th style="color:$blue-800">Movimientos</th>
+						<th>Fecha</th>
+						<th>Descripción</th>
+						<th>Valor</th>
+						<th>Acciones</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="bill" items="${listBills}">
 						<tr>
-							<td><c:out value="${bill.id} ${bill.date_bill}" /></td>
-							<td><c:out value="${bill.value}" /></td>
-							<td><a href="ver?id=<c:out value="${bill.id}"/>">Ver</a>
+							<td><c:out value="${bill.date_bill}" /></td>
+							<td><c:out value="${bill.observation}" /></td>
+							<td style="font-weight: bold;"><c:out value="$ ${bill.value}" /></td>
+							<td><a href="<%=request.getContextPath()%>/BillServlet?action=delete&id=<c:out value="${bill.id}"/>">Eliminar</a>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
-			<div class="container text-left">
-				
-				<form action="Bill">
-					<button type="submit" class="btn rounded-circle">+</button>
-				</form>
+			
+			<div class="container text-left">	
+				<a href="<%=request.getContextPath()%>/BillServlet?action=new">
+					<button type="submit" class="btn rounded-circle">+</button>	
+				</a>
 			</div>
 		</div>
 	</div>

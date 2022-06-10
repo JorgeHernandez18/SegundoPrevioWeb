@@ -46,14 +46,14 @@
 						name="pass" required="required"/>
 				</fieldset>
 					<div class="pt-2">
-						<button type="submit" class="btn btn-success">Log In</button>
+						<button type="submit" class="btn" style="background-color: blue; color:white;">Log In</button>
 					</div>
 					
 				
 				</form>	
 				
 				<div class="pt-2">
-					<p class="lead bold pt-2 ">
+					<p class="lead bold pt-2" style="color:red;">
 					
 						<%
 							String resultado = (String)request.getAttribute("mensaje");

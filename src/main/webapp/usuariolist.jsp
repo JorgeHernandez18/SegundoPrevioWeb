@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Aplicación Getión de Usuarios</title>
+<title>Listado de Usuarios BBVA</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -35,7 +35,7 @@
 			<h3 class="text-center">Listado de Usuarios BBVA</h3>
 			<hr>
 			<div class="container text-left">
-				<a href="<%=request.getContextPath()%>/login" class="btn btn-success">Login Usuario BBVA</a>
+				<a href="<%=request.getContextPath()%>/login" class="btn" style="background-color: blue; color:white;">Login Usuario BBVA</a>
 			</div>
 			<br>
 			<table class="table table-bordered">
@@ -45,7 +45,6 @@
 						<th>Nombre</th>
 						<th>Pass</th>
 						<th>Email</th>
-						<th>Acciones</th>
 					</tr>
 				</thead>
 				<tbody>

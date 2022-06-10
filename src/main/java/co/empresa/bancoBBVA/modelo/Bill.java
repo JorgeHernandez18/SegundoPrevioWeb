@@ -18,11 +18,12 @@ public class Bill {
 	private Integer type;
 	private String observation;
 	
-	public Bill(int id, Date date_bill, int value, String observation) {
+	public Bill(int id, Date date_bill, int value, String observation, int user_Id) {
 		this.id = id;
 		this.date_bill = date_bill;
 		this.value = value;
 		this.observation = observation;
+		this.user_Id = user_Id;
 	}
 	
 	public Bill(int id, Date date_bill, String observation, int type, int value) {
@@ -33,10 +34,12 @@ public class Bill {
 		this.value = value;	
 	}
 
-	public Bill(String observation, int type, int value) {
-		this.observation = observation;
-		this.type = type;
+	public Bill(Date date_bill, int user_id, int value, int type, String observation) {
+		this.date_bill = date_bill;
+		this.user_Id = user_id;
 		this.value = value;
+		this.type = type;
+		this.observation = observation;
 		
 	}
 }

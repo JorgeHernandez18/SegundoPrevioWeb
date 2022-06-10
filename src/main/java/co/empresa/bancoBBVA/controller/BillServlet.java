@@ -2,6 +2,11 @@ package co.empresa.bancoBBVA.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -18,7 +23,7 @@ import co.empresa.bancoBBVA.modelo.Bill;
 /**
  * Servlet implementation class BillServlet
  */
-@WebServlet("/Bill")
+@WebServlet(name = "BillServlet", urlPatterns = { "/BillServlet" })
 public class BillServlet extends HttpServlet {
 	private BillDao billDao;
 	private static final long serialVersionUID = 1L;
@@ -43,21 +48,24 @@ public class BillServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String action = request.getServletPath();
+		String action = request.getParameter("action");
 
 		try {
 			switch (action) {
-			case "/new":
+			case "new":
 				showNewForm(request, response);
 				break;
 			case "/insert":
 				insertarBill(request, response);
 				break;
-			case "/delete":
+			case "delete":
 				eliminarBill(request, response);
 				break;
-			case "/ver":
-				showForm(request, response);
+			case "/listar":
+				listBills(request, response);
+				break;
+			case "logout":
+				cerrarSesion(request, response);
 				break;
 			default:
 				listBills(request, response);
@@ -68,47 +76,56 @@ public class BillServlet extends HttpServlet {
 		}
 	}
 
-	private void listBills(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Bill> listBills = billDao.selectAll();
-		request.setAttribute("listBills", listBills);
+	private void cerrarSesion(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		request.getSession().invalidate();
+		response.sendRedirect("login.jsp");
+	}
 
+	private void listBills(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		List<Bill> listBills = billDao.selectAll();
+		List<Bill> listMostrar = new ArrayList<>();
+		int user_id = (int) request.getSession().getAttribute("user_id");
+		listBills.forEach((billes) -> {
+			if (billes.getUser_Id() == user_id)
+				listMostrar.add(billes);
+		});
+
+		System.out.print(request.getSession().getAttribute("user_id"));
+
+		request.getSession().setAttribute("listBills", listMostrar);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("billlist.jsp");
 		dispatcher.forward(request, response);
 	}
 
-	private void showForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void eliminarBill(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
 		int id = Integer.parseInt(request.getParameter("id"));
-
-		Bill billActual = billDao.select(id);
-
-		request.setAttribute("bill", billActual);
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("bill.jsp");
-		dispatcher.forward(request, response);
-	}
-
-	private void eliminarBill(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		int id = Integer.parseInt(request.getParameter("id"));
-
 		billDao.delete(id);
-
-		response.sendRedirect("list");
-
+		// response.sendRedirect("BillServlet?action=listar");
+		request.getRequestDispatcher("BillServlet?action=listar").forward(request, response);
 	}
 
-	private void insertarBill(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		String observation = request.getParameter("observation");
-		int type = Integer.parseInt(request.getParameter("type"));
-		int value = Integer.parseInt(request.getParameter("value"));
+	private void insertarBill(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
 
-		Bill bill = new Bill(observation, type, value);
+		Date date = new Date();
+		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+		String observation = request.getParameter("observation");
+		int type = Integer.parseInt(request.getParameter("movimiento"));
+		int value = Integer.parseInt(request.getParameter("value"));
+		int user_id = (int) request.getSession().getAttribute("user_id");
+
+		Bill bill = new Bill(sqlDate, user_id, value, type, observation);
 
 		billDao.insert(bill);
 
-		response.sendRedirect("list");
+		// response.sendRedirect("BillServlet?action=listar");
+		request.getRequestDispatcher("BillServlet?action=listar").forward(request, response);
 	}
 
-	private void showNewForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("bill.jsp");
 		dispatcher.forward(request, response);
 	}

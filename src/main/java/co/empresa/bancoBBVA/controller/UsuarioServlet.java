@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.http.parser.Cookie;
+
 import co.empresa.bancoBBVA.dao.UsuarioDao;
 import co.empresa.bancoBBVA.dao.UsuarioDaoFactory;
 import co.empresa.bancoBBVA.modelo.Usuario;
@@ -74,17 +76,18 @@ public class UsuarioServlet extends HttpServlet {
 
 	private void logearUsuario(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
-		
+
 		String username = request.getParameter("username");
 		String pass = request.getParameter("pass");
-		
+
 		Usuario usuario = usuarioDao.login(username, pass);
-		
-		if(usuario == null) {
+
+		if (usuario == null) {
 			request.setAttribute("mensaje", "Error en nombre de usuario o contraseña");
 			request.getRequestDispatcher("login.jsp").forward(request, response);
-		}else {
-			response.sendRedirect("billlist.jsp");
+		} else {
+			request.getSession().setAttribute("user_id", usuario.getId());
+			response.sendRedirect("BillServlet?action=/listar");
 		}
 
 	}

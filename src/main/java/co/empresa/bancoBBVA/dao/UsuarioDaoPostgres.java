@@ -36,7 +36,6 @@ public class UsuarioDaoPostgres implements UsuarioDao{
 				usuario.setId(rs.getInt("id"));
 				usuario.setUsername(rs.getString("username"));
 				usuario.setPass(rs.getString("pass"));
-				usuario.setEmail(rs.getString("email"));
 			}
 		} catch (SQLException e) {
 			
