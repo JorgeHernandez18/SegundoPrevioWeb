@@ -63,8 +63,10 @@ public class BillDaoPostgres implements BillDao{
 				int value = rs.getInt("value");
 				String observation = rs.getString("observation");
 				int user_id = rs.getInt("user_id");
-				bills.add(new Bill(id, date_bill, value, observation, user_id));
-			}	
+				int type = rs.getInt("type");
+				bills.add(new Bill(id, date_bill, user_id, value, type, observation));
+			}
+			
 		}catch(SQLException e) {
 			System.out.print(e);
 		}

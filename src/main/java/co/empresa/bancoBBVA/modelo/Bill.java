@@ -18,14 +18,6 @@ public class Bill {
 	private Integer type;
 	private String observation;
 	
-	public Bill(int id, Date date_bill, int value, String observation, int user_Id) {
-		this.id = id;
-		this.date_bill = date_bill;
-		this.value = value;
-		this.observation = observation;
-		this.user_Id = user_Id;
-	}
-	
 	public Bill(int id, Date date_bill, String observation, int type, int value) {
 		this.id = id;
 		this.date_bill = date_bill;

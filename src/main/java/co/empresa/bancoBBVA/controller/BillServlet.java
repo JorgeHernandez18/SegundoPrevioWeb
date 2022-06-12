@@ -26,6 +26,7 @@ import co.empresa.bancoBBVA.modelo.Bill;
 @WebServlet(name = "BillServlet", urlPatterns = { "/BillServlet" })
 public class BillServlet extends HttpServlet {
 	private BillDao billDao;
+	private List<Bill> listMostrar = new ArrayList<>();
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -78,21 +79,20 @@ public class BillServlet extends HttpServlet {
 
 	private void cerrarSesion(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		request.getSession().invalidate();
+		listMostrar.clear();
 		response.sendRedirect("login.jsp");
 	}
 
 	private void listBills(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		List<Bill> listBills = billDao.selectAll();
-		List<Bill> listMostrar = new ArrayList<>();
+		listMostrar.clear();
 		int user_id = (int) request.getSession().getAttribute("user_id");
 		listBills.forEach((billes) -> {
 			if (billes.getUser_Id() == user_id)
 				listMostrar.add(billes);
 		});
-
-		System.out.print(request.getSession().getAttribute("user_id"));
-
+		
 		request.getSession().setAttribute("listBills", listMostrar);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("billlist.jsp");
 		dispatcher.forward(request, response);
@@ -102,7 +102,6 @@ public class BillServlet extends HttpServlet {
 			throws SQLException, IOException, ServletException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		billDao.delete(id);
-		// response.sendRedirect("BillServlet?action=listar");
 		request.getRequestDispatcher("BillServlet?action=listar").forward(request, response);
 	}
 
@@ -119,8 +118,7 @@ public class BillServlet extends HttpServlet {
 		Bill bill = new Bill(sqlDate, user_id, value, type, observation);
 
 		billDao.insert(bill);
-
-		// response.sendRedirect("BillServlet?action=listar");
+		
 		request.getRequestDispatcher("BillServlet?action=listar").forward(request, response);
 	}
 

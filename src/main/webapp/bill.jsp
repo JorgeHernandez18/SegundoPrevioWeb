@@ -30,35 +30,31 @@
 			<div class="card-body">
 
 				<form action=BillServlet?action=/insert method="post">
-					<fieldset class="form-group">
+					
+					<fieldset class="form-group py-2">
 						<label>Descripción</label> <br />
-						<textarea name="observation" rows="3" resize="none"></textarea>
+						<textarea name="observation" rows="3" style="width: 100%;"></textarea>
 					</fieldset>
 
-					<fieldset class="form-group">
-						<label>Tipo de movimiento</label> 
-						
-						<input type="radio"
-							value=1 class="form-control" name="movimiento" /> Ingreso <br />
-						<input type="radio" value=2 class="form-control" name="movimiento" />
+					<fieldset class="form-group d-flex py-2">
+						<label>Tipo de movimiento</label> <input type="radio" value=1
+							class="form-control" name="movimiento" /> Ingreso <br /> <input
+							type="radio" value=2 class="form-control" name="movimiento" />
 						Gasto
 					</fieldset>
 
-					<fieldset class="form-group">
+					<fieldset class="form-group py-2">
 						<label>Valor</label> <br /> <input type="text" value=""
 							class="form-control" name="value" />
 					</fieldset>
 
-					<fieldset class="form-group">
-						<label>user_id</label> <input type="text"
-							value='<%=request.getSession().getAttribute("user_id")%>'
-							class="form-control" name="user_id" />
-					</fieldset>
-
-					<button type="submit" class="btn btn-success">Registrar</button>
-					<a href="<%=request.getContextPath()%>/BillServlet?action=listar"
-						type="button">Cancelar</a>
-
+					<div class="d-flex justify-content-around">
+						<button type="submit" class="btn mt-2"
+							style="background-color: blue; color: white;">Registrar</button>
+						<a href="<%=request.getContextPath()%>/BillServlet?action=listar"
+							class="mt-4" style="text-decoration: none;" type="button">Cancelar</a>
+					</div>
+					
 				</form>
 
 				<div class="pt-2">
